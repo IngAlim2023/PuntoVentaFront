@@ -24,12 +24,12 @@ export function FormProducto() {
     formData.append("stock", data.stock);
     formData.append("foto", data.foto[0]);
     formData.append("ubicacion", data.ubicacion);
-    
+
     try {
       await crearProducto(formData);
       setMessage({ type: "success", text: "Producto creado con éxito." });
       reset(); // Reinicia el formulario
-      toast.success("Producto Creado")
+      toast.success("Producto Creado");
     } catch (e) {
       setMessage({
         type: "error",
@@ -144,9 +144,20 @@ export function FormProducto() {
             </label>
             <input
               type="text"
-              {...register("ubicacion", {min:{value:4, message:"la ubicación minimo tiene cuatro caracteres"}, max: {value: 10, message:"caracteres maximos 10"}})}
+              {...register("ubicacion", {
+                minLength: {
+                  value: 4,
+                  message: "La ubicación debe tener al menos 4 caracteres",
+                },
+                maxLength: {
+                  value: 10,
+                  message:
+                    "La ubicación puede tener un máximo de 10 caracteres",
+                },
+              })}
               className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             />
+
             {errors.ubicacion && (
               <span className="text-red-500 text-sm">
                 {errors.ubicacion.message}

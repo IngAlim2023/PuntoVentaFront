@@ -1,11 +1,17 @@
-import { obtenerProductos } from "../../api/producto.api.js";
+import { dropProducto, obtenerProductos } from "../../api/producto.api.js";
 import { useEffect, useState } from "react";
 import { CodigoBarras } from "../../components/CodigoBarras.jsx";
+import toast from "react-hot-toast";
+import { DeleteModal } from "../../components/DeleteModal.jsx";
+
 
 export function StockProducto() {
   const [load, setLoad] = useState(true);
   const [data, setData] = useState([]);
-  const url = "http://localhost:3000/uploads/";
+  const url = import.meta.env.VITE_API_UPLOADS;
+
+  const [ refresh, setRefresh ] = useState(false);
+
   useEffect(() => {
     async function getProductos() {
       const res = await obtenerProductos();
@@ -13,13 +19,48 @@ export function StockProducto() {
       setLoad(false);
     }
     getProductos();
-  }, []);
+  }, [refresh]);
+
+  //Eliminar un Producto:
+  const [isOpen, setIsOpen] = useState(false);
+  const [confirmacion, setConfirmacion] = useState(null);
+  // Para poder user el modal como componente voy a cambiar el nombre del id a idC
+  const [idC, setidC] = useState(null);
+  const [validConfirmacion, setValidConfirmacion] = useState(null);
+
+  const handleDropDelete = (id) => () => {
+    const min = Math.ceil(2);
+    const max = Math.floor(100);
+    setConfirmacion(Math.floor(Math.random() * (max - min) + min));
+    setIsOpen(true);
+    setidC(id);
+  }
+  const handleDrop = async () =>{
+    if (confirmacion === parseInt(validConfirmacion)) {
+      setIsOpen(false);
+      await dropProducto(idC);
+      setRefresh(!refresh);
+      toast.success("Eliminado correctamente");
+    } else {
+      setIsOpen(false);
+      toast.error("Código incorrecto");
+    }
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-center text-gray-700 mb-8">
         Stock de Productos
       </h1>
+      {isOpen && (
+        <DeleteModal
+          confirmacion={confirmacion}
+          setValidConfirmacion={setValidConfirmacion}
+          handleDrop={handleDrop}
+          setIsOpen={setIsOpen}
+        />
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {load ? (
           <div role="status">
@@ -46,7 +87,9 @@ export function StockProducto() {
             {data.map((producto) => (
               <div
                 key={producto.idPrd}
-                className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
+                className={`${
+                  producto.stock < 3 ? "bg-red-200" : "bg-white"
+                } shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200`}
               >
                 <div className="flex items-center justify-center mb-4">
                   <img
@@ -66,6 +109,21 @@ export function StockProducto() {
                   <span className="font-semibold">Stock:</span> {producto.stock}
                 </p>
                 <CodigoBarras value={producto.codBarras} />
+
+                {/* Botón de eliminar */}
+                <button
+                  onClick={() => alert("Editar")}
+                  className="mt-4 w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  Editar
+                </button>
+                {/* Botón de eliminar */}
+                <button
+                  onClick={handleDropDelete(producto.idPrd)}
+                  className="mt-4 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  Eliminar
+                </button>
               </div>
             ))}
           </>

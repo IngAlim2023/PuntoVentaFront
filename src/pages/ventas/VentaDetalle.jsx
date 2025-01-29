@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DeleteModal } from "../../components/DeleteModal.jsx";
 import { dropVenta, getVentas } from "../../api/venta.api.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -41,22 +42,22 @@ export function VentaDetalle() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [confirmacion, setConfirmacion] = useState(null);
-  const [idVenta, setIdVenta] = useState(null);
+  const [idC, setidC] = useState(null);
   const [validConfirmacion, setValidConfirmacion] = useState(null);
 
-  const handleDropConfirVenta = (idVenta) => () => {
+  const handleDropConfirVenta = (id) => () => {
     const min = Math.ceil(2);
     const max = Math.floor(100);
     setConfirmacion(Math.floor(Math.random() * (max - min) + min));
     setIsOpen(true);
-    setIdVenta(idVenta);
+    setidC(id);
   };
-  const handleDropVenta = async () => {
+  const handleDrop = async () => {
     if (confirmacion === parseInt(validConfirmacion)) {
       setIsOpen(false);
-      await dropVenta(idVenta);
+      await dropVenta(idC);
       setRefresh(!refresh);
-      toast.success("Venta eliminada correctamente");
+      toast.success("Eliminado correctamente");
     } else {
       setIsOpen(false);
       toast.error("Código incorrecto");
@@ -70,42 +71,12 @@ export function VentaDetalle() {
       </h1>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full relative">
-            {/* Título del Modal */}
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-              ¿Quieres eliminar la venta?
-            </h2>
-            <p className="text-gray-600 text-center mb-4">
-              Ingresa el siguiente código:{" "}
-              <span className="font-bold text-gray-800 ">
-                {confirmacion}
-              </span>
-            </p>
-            <input
-              type="number"
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:border-cyan-600 mb-4"
-              placeholder="Ingresa el código"
-              onChange={(e) => setValidConfirmacion(e.target.value)}
-            />
-
-            {/* Botones */}
-            <div className="flex justify-between gap-4">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDropVenta}
-                className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300"
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteModal
+          confirmacion={confirmacion}
+          setValidConfirmacion={setValidConfirmacion}
+          handleDrop={handleDrop}
+          setIsOpen={setIsOpen}
+        />
       )}
 
       <div className="m-2 flex flex-wrap gap-6">
