@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { CodigoBarras } from "../../components/CodigoBarras.jsx";
 import toast from "react-hot-toast";
 import { DeleteModal } from "../../components/DeleteModal.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 export function StockProducto() {
@@ -11,6 +12,8 @@ export function StockProducto() {
   const url = import.meta.env.VITE_API_UPLOADS;
 
   const [ refresh, setRefresh ] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getProductos() {
@@ -112,7 +115,8 @@ export function StockProducto() {
 
                 {/* Botón de eliminar */}
                 <button
-                  onClick={() => alert("Editar")}
+                  onClick={()=> navigate(`/editarProducto/${producto.idPrd}`)
+                  }
                   className="mt-4 w-full bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-colors"
                 >
                   Editar

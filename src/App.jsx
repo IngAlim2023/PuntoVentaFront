@@ -36,6 +36,7 @@ function App() {
             {/* Rutas protegidas, solo accesibles si está autenticado */}
             <Route element={<ProtectedRoute />}>
               <Route path="/crearProducto" element={<FormProducto />} />
+              <Route path="/editarProducto/:id" element={<FormProducto />} />
               <Route path="/verProductos" element={<StockProducto />} />
               <Route path="/venta" element={<VentaProductos />} />
               <Route path="/verVenta" element={<VentaDetalle />} />

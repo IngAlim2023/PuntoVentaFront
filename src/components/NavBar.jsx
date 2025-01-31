@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 export const NavBar = () => {
   const [dropdown, setDropdown] = useState(false);

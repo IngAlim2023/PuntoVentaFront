@@ -1,19 +1,41 @@
-import { crearProducto } from "../../api/producto.api";
+import { actualizarProducto, crearProducto, obtenerProducto } from "../../api/producto.api.js";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function FormProducto() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const params = useParams();
+  const [producto, setProducto] = useState([]);
+
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    async function loadProducto() {
+      if (params.id) {
+        const res = await obtenerProducto(params.id);
+        setProducto(res.data.data);
+        setValue('codBarras', res.data.data.codBarras);
+        setValue('descripcion', res.data.data.descripcion);
+        setValue('precio_venta', res.data.data.precio_venta);
+        setValue('stock', res.data.data.stock);
+        setValue('ubicacion', res.data.data.ubicacion);
+      }
+    }
+    loadProducto();
+  }, []);
+
+  console.log(producto)
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     setMessage(null);
@@ -26,10 +48,17 @@ export function FormProducto() {
     formData.append("ubicacion", data.ubicacion);
 
     try {
-      await crearProducto(formData);
-      setMessage({ type: "success", text: "Producto creado con éxito." });
+      if (params.id) {
+        await actualizarProducto(params.id, formData);
+        setMessage({type: 'success', message: 'Producto actualizado con éxito.'});
+        toast.success('Producto actualizado con éxito');
+        navigate("/verProductos");
+      }else{
+        await crearProducto(formData);
+        setMessage({ type: "success", text: "Producto creado con éxito." });
+        toast.success("Producto Creado");
+      }
       reset(); // Reinicia el formulario
-      toast.success("Producto Creado");
     } catch (e) {
       setMessage({
         type: "error",
@@ -184,7 +213,18 @@ export function FormProducto() {
           </div>
 
           {/* Botón de envío */}
-          <button
+          {params.id ? (<button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 px-4 rounded-md text-white ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            }`}
+          >
+            {loading ? "Actualizando..." : "Editar Producto"}
+          </button>):(
+            <button
             type="submit"
             disabled={loading}
             className={`w-full py-2 px-4 rounded-md text-white ${
@@ -195,6 +235,7 @@ export function FormProducto() {
           >
             {loading ? "Creando..." : "Crear Producto"}
           </button>
+          )}
         </form>
       </div>
     </div>
