@@ -2,19 +2,16 @@ import SelectProductos from "../../components/productos/SelectProductos.jsx";
 import { useEffect, useState } from "react";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import { createVentas } from "../../api/venta.api.js";
-import { getEmpleadoById } from "../../api/usuario.api.js";
 import toast from "react-hot-toast";
-import { useAuth } from "../../context/AuthContext";
 import { SelectClientes } from "../../components/clientes/SelectClientes.jsx";
 
 export default function VentaProductos() {
   const [productos, setProductos] = useState([]);
   const [total, setTotal] = useState(0);
   const [data, setData] = useState({});
-  const { user } = useAuth();
 
   const [idCustomer, setIdCustomer] = useState("");
-  const [employer, setEmployer] = useState("");
+  
 
   // Función para incrementar la cantidad de un producto
   const incrementarCantidad = (idPrd) => {
@@ -49,18 +46,7 @@ export default function VentaProductos() {
     );
   };
 
-  useEffect(() => {
-    if (!user?.userid) return;
-    async function getEmployer() {
-      try {
-        const res = await getEmpleadoById(user.userid);
-        setEmployer(res.data.data);
-      } catch (error) {
-        console.error("Error cargando empleado:", error);
-      }
-    }
-    getEmployer();
-  }, [productos]);
+  
 
   useEffect(() => {
     // Calcular el total directamente
@@ -74,7 +60,6 @@ export default function VentaProductos() {
     setData({
       total: precio_total,
       productos: productos,
-      Empleados_idEmpleado: employer.idEmpleado,
       cliente_idcliente: idCustomer,
     });
   }, [productos, idCustomer]);
