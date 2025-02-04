@@ -49,7 +49,7 @@ export default function Inicio() {
               key={product.idPrd}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, delay: product.idPrd * 0.2 }}
+              transition={{ duration: 0.8, delay: product.idPrd * 0.1 }}
               className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"
             >
               <div
