@@ -28,7 +28,6 @@ export function CustomerForm() {
     } catch (error) {
       toast.error(`Hubo un error al crear el cliente. Intenta nuevamente. o el ${error.response.data.message}`);
     }
-    console.log(data);
   });
 
   const inputClass = `w-full mt-1 px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500`;
