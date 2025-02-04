@@ -96,7 +96,7 @@ export function StockProducto() {
               >
                 <div className="flex items-center justify-center mb-4">
                   <img
-                    src={`${url}${producto.foto}`}
+                    src={`${url}/${producto.foto}`}
                     alt={producto.descripcion}
                     className="w-auto max-h-40 rounded-md"
                   />

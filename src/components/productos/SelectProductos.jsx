@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 export default function SelectProductos({ productos, setProductos }) {
   const [data, setData] = useState([]);
   const [dataFilter, setDataFilter] = useState(data);
+  const url = import.meta.env.VITE_API_UPLOADS;
 
   useEffect(() => {
     async function loadProducts() {
@@ -65,7 +66,7 @@ export default function SelectProductos({ productos, setProductos }) {
               <p className="text-sm text-gray-600">${pro.precio_venta}</p>
             </div>
             <img
-              src={`http://localhost:3000/uploads/${pro.foto}`}
+              src={`${url}/${pro.foto}`}
               alt={pro.descripcion}
               className="w-16 h-16 object-cover rounded-lg"
             />
