@@ -24,14 +24,23 @@ function App() {
             <Route path="/" element={<Inicio />} />
 
             {/* Si el usuario está autenticado, redirigir a "/" en vez de Login o Registro */}
-            <Route 
-              path="/Login" 
-              element={ <AuthRedirect><Login /></AuthRedirect> } 
+            <Route
+              path="/Login"
+              element={
+                <AuthRedirect>
+                  <Login />
+                </AuthRedirect>
+              }
             />
-            <Route 
-              path="/registro" 
-              element={ <AuthRedirect><CustomerForm /></AuthRedirect> } 
+            <Route
+              path="/registro"
+              element={
+                <AuthRedirect>
+                  <CustomerForm />
+                </AuthRedirect>
+              }
             />
+            <Route path="/crearEmpleado" element={<UsuarioForm />} />
 
             {/* Rutas protegidas, solo accesibles si está autenticado */}
             <Route element={<ProtectedRoute />}>
@@ -41,7 +50,6 @@ function App() {
               <Route path="/venta" element={<VentaProductos />} />
               <Route path="/verVenta" element={<VentaDetalle />} />
               <Route path="/facturaVenta/:id" element={<VentaFactura />} />
-              <Route path="/crearEmpleado" element={<UsuarioForm />} />
             </Route>
 
             {/* Manejo de páginas no encontradas */}
