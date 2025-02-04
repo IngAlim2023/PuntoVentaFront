@@ -9,7 +9,6 @@ export function Login() {
 
   const onSubmit = handleSubmit(async (data) => {
     await singup(data);
-    toast.success("Bienvenido");
   });
 
   return (

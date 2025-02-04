@@ -35,7 +35,6 @@ export function FormProducto() {
     loadProducto();
   }, []);
 
-  console.log(producto)
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     setMessage(null);

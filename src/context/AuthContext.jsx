@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Error al iniciar sesión");
     }
   };
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       await usuarioLogout();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Error al cerrar sesión");
     } finally {
       setIsAuthenticated(false);
