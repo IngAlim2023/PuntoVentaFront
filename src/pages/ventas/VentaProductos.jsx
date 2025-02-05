@@ -4,6 +4,7 @@ import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import { createVentas } from "../../api/venta.api.js";
 import toast from "react-hot-toast";
 import { SelectClientes } from "../../components/clientes/SelectClientes.jsx";
+import { SelectEmpleados } from "../../components/clientes/SelectEmpleados.jsx";
 
 export default function VentaProductos() {
   const [productos, setProductos] = useState([]);
@@ -11,7 +12,7 @@ export default function VentaProductos() {
   const [data, setData] = useState({});
 
   const [idCustomer, setIdCustomer] = useState("");
-  
+  const [idEmpleado, setIdEmpleado] = useState("");
 
   // Función para incrementar la cantidad de un producto
   const incrementarCantidad = (idPrd) => {
@@ -46,8 +47,6 @@ export default function VentaProductos() {
     );
   };
 
-  
-
   useEffect(() => {
     // Calcular el total directamente
     const precio_total = productos.reduce(
@@ -61,8 +60,9 @@ export default function VentaProductos() {
       total: precio_total,
       productos: productos,
       cliente_idcliente: idCustomer,
+      Empleados_idEmpleado: idEmpleado,
     });
-  }, [productos, idCustomer]);
+  }, [productos, idCustomer, idEmpleado]);
 
   async function generateVenta() {
     if (productos.length === 0) {
@@ -72,8 +72,12 @@ export default function VentaProductos() {
     if (!idCustomer) {
       return toast.error("Debes seleccionar un cliente.");
     }
+    if (!idEmpleado) {
+      return toast.error("Debes seleccionar el empleado a cargo de la venta.");
+    }
 
     try {
+      console.log(data);
       await createVentas(data);
       toast.success("Venta registrada exitosamente.");
       setProductos([]);
@@ -94,9 +98,34 @@ export default function VentaProductos() {
             <h2 className="text-2xl font-semibold mb-6 text-gray-700">
               Productos Seleccionados
             </h2>
-            <div className="mb-4 w-64">
-              <SelectClientes setIdCustomer={setIdCustomer} />
+            <div className="flex gap-6">
+              {/* Selección de Cliente */}
+              <div className="mb-4 w-64">
+                <p className="text-gray-700 font-medium mb-1">
+                  Seleccionar Cliente
+                </p>
+                <div className="relative">
+                  <SelectClientes
+                    setIdCustomer={setIdCustomer}
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+              </div>
+
+              {/* Selección de Empleado */}
+              <div className="mb-4 w-64">
+                <p className="text-gray-700 font-medium mb-1">
+                  Seleccionar Empleado
+                </p>
+                <div className="relative">
+                  <SelectEmpleados
+                    setIdEmpleado={setIdEmpleado}
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+              </div>
             </div>
+
             {productos.length > 0 ? (
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead className="bg-cyan-100 text-gray-700">

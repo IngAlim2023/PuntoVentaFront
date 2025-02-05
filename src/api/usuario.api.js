@@ -5,3 +5,4 @@ export const getDocs = async () => await instance.get('/usuarios/verDocumentos')
 export const createCliente = async (data) => await instance.post("/usuarios/crearCliente", data);
 export const getClientes = async () => await instance.get('/usuarios/verClientes');
 export const getEmpleadoById = async (id) => await instance.get(`/usuarios/empleadoId/${id}`);
+export const getEmpleado = async () => await instance.get('/usuarios/verEmpleados');
