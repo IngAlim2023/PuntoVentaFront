@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 
 export function Login() {

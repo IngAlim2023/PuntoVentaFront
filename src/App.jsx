@@ -31,15 +31,19 @@ function App() {
                   <Login />
                 </AuthRedirect>
               }
-            />
-            <Route
-              path="/registro"
-              element={
-                <AuthRedirect>
-                  <CustomerForm />
-                </AuthRedirect>
-              }
-            />
+            />{/*
+            
+              <Route
+                path="/registro"
+                element={
+                  <AuthRedirect>
+                    <CustomerForm />
+                  </AuthRedirect>
+                }
+              />
+            
+            
+            */}
 
             {/* Rutas protegidas, solo accesibles si está autenticado */}
             <Route element={<ProtectedRoute />}>
