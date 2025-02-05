@@ -101,6 +101,7 @@ export function FormProducto() {
                 required: "Este campo es obligatorio",
               })}
               className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              readOnly={params.id}
             />
             {errors.codBarras && (
               <span className="text-red-500 text-sm">

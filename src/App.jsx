@@ -40,7 +40,6 @@ function App() {
                 </AuthRedirect>
               }
             />
-            <Route path="/crearEmpleado" element={<UsuarioForm />} />
 
             {/* Rutas protegidas, solo accesibles si está autenticado */}
             <Route element={<ProtectedRoute />}>
@@ -50,6 +49,7 @@ function App() {
               <Route path="/venta" element={<VentaProductos />} />
               <Route path="/verVenta" element={<VentaDetalle />} />
               <Route path="/facturaVenta/:id" element={<VentaFactura />} />
+              <Route path="/crearEmpleado" element={<UsuarioForm />} />
             </Route>
 
             {/* Manejo de páginas no encontradas */}
