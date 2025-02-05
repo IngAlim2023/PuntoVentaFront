@@ -53,13 +53,14 @@ export function Login() {
           </button>
         </form>
 
-        {/* Enlace de registro */}
+        {/* Enlace de registro //Por ahora esta bloqueado para que nadie pueda ingresar maliciosamente
         <p className="text-center text-sm text-gray-600 mt-4">
           ¿No tienes una cuenta?{" "}
           <Link to="/registro" className="text-indigo-600 font-medium hover:underline">
             Regístrate aquí
           </Link>
         </p>
+        */}
       </div>
     </div>
   );
