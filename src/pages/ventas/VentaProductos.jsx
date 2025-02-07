@@ -77,7 +77,6 @@ export default function VentaProductos() {
     }
 
     try {
-      console.log(data);
       await createVentas(data);
       toast.success("Venta registrada exitosamente.");
       setProductos([]);

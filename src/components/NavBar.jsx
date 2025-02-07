@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { FaUserAlt } from "react-icons/fa";
+import { IoMdMenu } from "react-icons/io";
+import { IoNotifications } from "react-icons/io5";
 
 export const NavBar = () => {
-  const [dropdown, setDropdown] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [navMobile, setNavMobile] = useState(false);
+  const [active, setActive] = useState(false);
   const { singout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
-  const handleToggleDropdown = () => setDropdown(!dropdown);
-  const handleToggleMenu = () => setMenuOpen(!menuOpen);
+  const param = useLocation();
 
   const handleSignOut = async () => {
     try {
       await singout();
       toast.success("Cierre de sesión exitoso, ¡Hasta luego!");
+      setNavMobile(false);
+      setActive(false);
       navigate("/Login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
@@ -23,137 +26,172 @@ export const NavBar = () => {
     }
   };
 
+  const navLinks = isAuthenticated
+    ? [
+        { to: "/", label: "Inicio" },
+        { to: "/venta", label: "Venta" },
+        { to: "/verVenta", label: "Ver Ventas" },
+        { to: "/crearProducto", label: "Crear Producto" },
+        { to: "/verProductos", label: "Ver Productos" },
+      ]
+    : [
+        { to: "/", label: "Inicio" },
+        { to: "/Productos", label: "Productos" },
+      ];
+
+  const toggleMobileMenu = () => setNavMobile((prev) => !prev);
+  const toggleUserMenu = () => setActive((prev) => !prev);
+
   return (
-    <nav className="bg-[#0a0a0a] text-gray-200 shadow-lg shadow-cyan-500/20 fixed top-0 w-full z-50">
-      <div className="container mx-auto px-6 py-3 flex justify-between items-center">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold tracking-wide hover:text-cyan-400 transition"
-        >
-          TechNova
-        </Link>
-
-        {/* Botón de menú en móviles */}
-        <button
-          className="md:hidden text-2xl hover:text-cyan-400 transition"
-          onClick={handleToggleMenu}
-        >
-          ☰
-        </button>
-
-        {/* Menú de navegación (Desktop y Mobile) */}
-        <ul
-          className={`md:flex space-x-6 absolute md:relative top-16 md:top-auto left-0 w-full md:w-auto bg-[#0a0a0a] md:bg-transparent p-6 md:p-0 border-t md:border-none transition-all duration-300 ${
-            menuOpen ? "block" : "hidden md:flex"
-          }`}
-        >
-          <li>
-            <Link
-              to="/"
-              className="block md:inline hover:text-cyan-400 transition text-lg"
+    <nav className="fixed top-0 backdrop-blur-sm w-full z-10">
+      <div className="mx-auto w-full px-2 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between">
+          {/* Menu mobile button */}
+          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <button
+              type="button"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              onClick={toggleMobileMenu}
             >
-              Inicio
-            </Link>
-          </li>
-
-          {isAuthenticated ? (
-            <>
-              <li>
-                <Link
-                  to="/venta"
-                  className="block md:inline hover:text-cyan-400 transition text-lg"
-                >
-                  Venta
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/verVenta"
-                  className="block md:inline hover:text-cyan-400 transition text-lg"
-                >
-                  Ver Ventas
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/crearProducto"
-                  className="block md:inline hover:text-cyan-400 transition text-lg"
-                >
-                  Crear Producto
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/verProductos"
-                  className="block md:inline hover:text-cyan-400 transition text-lg"
-                >
-                  Ver Productos
-                </Link>
-              </li>
-            </>
-          ) : (
-            <li>
-              <Link
-                to="/Productos"
-                className="block md:inline hover:text-cyan-400 transition text-lg"
-              >
-                Productos
-              </Link>
-            </li>
-          )}
-        </ul>
-
-        {/* Menú desplegable de usuario */}
-
-        <div className="relative hidden md:block">
-          <button
-            onMouseOver={handleToggleDropdown}
-            className="px-4 py-2 rounded hover:text-cyan-400 transition"
-          >
-            Usuarios ⏷
-          </button>
-
-          <div
-            onMouseLeave={handleToggleDropdown}
-            className={`absolute right-0 mt-2 w-48 bg-[#121212] border border-cyan-500 rounded-md shadow-lg py-2 ring-1 ring-cyan-500 ring-opacity-30 transition-transform ${
-              dropdown
-                ? "scale-100 opacity-100"
-                : "scale-95 opacity-0 pointer-events-none"
-            }`}
-          >
-            <ul className="py-2 text-sm text-gray-300">
-              {["Dashboard", "Settings", "Earnings"].map((option, index) => (
-                <li key={index}>
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 hover:bg-cyan-500/20 hover:text-cyan-300 transition"
-                  >
-                    {option}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            {isAuthenticated ? (
-              <div className="py-1">
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 transition"
-                >
-                  Salir
-                </button>
-              </div>
-            ) : (
-              <div className="py-1">
-                <Link
-                  to="/Login"
-                  className="block px-4 py-2 text-sm text-cyan-400 hover:bg-cyan-500/20 transition"
-                >
-                  Ingresar
-                </Link>
-              </div>
-            )}
+              <span className="sr-only">Abrir Menú</span>
+              <IoMdMenu className="text-2xl" />
+            </button>
           </div>
+
+          {/* Logo and desktop menu */}
+          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex shrink-0 items-center">
+              <Link
+                to="/"
+                className={param.pathname === "/" ? "text-2xl text-sky-800 font-bold tracking-wide hover:text-cyan-400 transition": "text-2xl font-bold tracking-wide hover:text-cyan-400 transition"}
+              >
+                TechNova
+              </Link>
+            </div>
+
+            {/* Desktop nav links */}
+            <div className="hidden sm:ml-6 sm:block">
+              <div className="flex space-x-4">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                      param.pathname === link.to
+                        ? "bg-sky-500 text-w"
+                        : "text-sky-800"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Icons and profile dropdown */}
+          <div className="sm:flex absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            
+            <button
+              type="button"
+              className="relative rounded-full p-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 m-2"
+            >
+              <IoNotifications className="text-2xl" />
+            </button>
+
+            {/* Profile dropdown */}
+            <div className="relative ml-3">
+              <button
+                type="button"
+                className="relative flex rounded-full bg-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                onClick={toggleUserMenu}
+              >
+                <FaUserAlt className="text-2xl" />
+              </button>
+
+              <div
+                className={`${
+                  active
+                    ? "absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                    : "hidden"
+                }`}
+              >
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to="/"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={toggleUserMenu}
+                    >
+                      Your Profile
+                    </Link>
+                    <Link
+                      to="/"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={toggleUserMenu}
+                    >
+                      Settings
+                    </Link>
+                    <Link
+                      to="/crearEmpleado"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={toggleUserMenu}
+                    >
+                      Other
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      onClick={handleSignOut}
+                    >
+                      Cerrar sesión
+                    </Link>
+                  </>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                  >
+                    Ingresar
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div className={navMobile ? "hidden" : "sm:hidden"}>
+        <div className="space-y-1 px-2 pb-3 pt-2">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="block rounded-md px-3 py-2 text-base font-medium text-sky-800 hover:bg-gray-700 hover:text-white"
+              onClick={toggleMobileMenu}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {isAuthenticated ?
+        (
+          <Link
+            to="/login"
+            className="block rounded-md px-3 py-2 text-base font-medium text-sky-800 hover:bg-gray-700 hover:text-white"
+            onClick={handleSignOut}
+          >
+            Cerrar sesión
+          </Link>
+        ):(
+          <Link
+            to="/login"
+            className="block rounded-md px-3 py-2 text-base font-medium text-sky-800 hover:bg-gray-700 hover:text-white"
+          >
+            Ingresar
+          </Link>
+        )  
+        }
         </div>
       </div>
     </nav>
