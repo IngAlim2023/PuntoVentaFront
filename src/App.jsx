@@ -19,7 +19,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <NavBar />
-        <div className="mt-6">
+        <div className="mt-8">
           <Routes>
             <Route path="/" element={<Inicio />} />
 

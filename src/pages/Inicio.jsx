@@ -44,12 +44,12 @@ export default function Inicio() {
       <section className="py-20 text-center">
         <h2 className="text-3xl font-bold mb-10">Nuestros Productos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-10">
-          {productos.map((product) => (
+          {productos.map((product, index) => (
             <motion.div
               key={product.idPrd}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, delay: product.idPrd * 0.1 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
               className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"
             >
               <div
